@@ -74,8 +74,9 @@ Template.tsAdminNewHitType.events = {
       Title: tmpl.find("input[name=title]").value,
       Description: tmpl.find("textarea[name=desc]").value,
       Keywords: tmpl.find("input[name=keywords]").value,
-      Reward: parseFloat(tmpl.find("input[name=reward]").value),
-      QualificationRequirement: $(tmpl.find("select[name=quals]")).val(),
+      Reward: tmpl.find("input[name=reward]").value,
+      QualificationRequirements: $(tmpl.find("select[name=quals]")).val(),
+      // LifetimeInSeconds: 604800,
       AssignmentDurationInSeconds: parseInt(tmpl.find("input[name=duration]").value),
       AutoApprovalDelayInSeconds: parseInt(tmpl.find("input[name=delay]").value)
     });
@@ -267,6 +268,7 @@ Template.tsAdminNewHit.events = {
     e.preventDefault();
 
     const hitTypeId = tmpl.find("select[name=hittype]").value;
+    console.log("THe hit type id being submitted", hitTypeId);
 
     if (!hitTypeId) {
       bootbox.alert("HIT Type isn't registered");

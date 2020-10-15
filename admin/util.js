@@ -42,6 +42,7 @@ TurkServer.callWithModal = function(...args1) {
   args.push(function(err, res) {
     dialog.modal("hide");
     if (err != null) {
+      console.log("Error here")
       bootbox.alert(err);
       return;
     }

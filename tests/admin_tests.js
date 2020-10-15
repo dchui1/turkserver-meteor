@@ -40,10 +40,10 @@ Tinytest.add(
     const newHitId = Random.id();
     TestUtils.mturkAPI.handler = function(op, params) {
       switch (op) {
-        case "CreateHIT":
+        case "createHIT":
           return newHitId;
-        case "GetHIT":
-          return { CreationTime: new Date() }; // Stub out the GetHIT call with some arbitrary data
+        case "getHIT":
+          return { CreationTime: new Date() }; // Stub out the getHIT call with some arbitrary data
       }
     };
 
@@ -74,10 +74,10 @@ Tinytest.add(
     HITs.insert({ HITId, HITTypeId: hitTypeId });
     Batches.upsert(batchId, { $set: { active: true } });
 
-    // Need to return something for GetHIT else complaining from Mongo et al
+    // Need to return something for getHIT else complaining from Mongo et al
     TestUtils.mturkAPI.handler = function(op, params) {
       switch (op) {
-        case "GetHIT":
+        case "getHIT":
           return { HITId };
       }
     };

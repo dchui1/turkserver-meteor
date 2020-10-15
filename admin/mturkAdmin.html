@@ -72,10 +72,10 @@
         <dd>{{renderReward}}</dd>
         <dt>Qualifications</dt>
         <dd>
-            {{#each QualificationRequirement}}
+            {{#each QualificationRequirements}}
             <span class="badge badge-info">{{qualName}}</span>
             {{/each}}
-            {{#unless QualificationRequirement}}
+            {{#unless QualificationRequirements}}
             <i>(none)</i>
             {{/unless}}
         </dd>

@@ -1,12 +1,15 @@
 Package.describe({
-  name: "mizzao:turkserver",
+  name: "mizzao:turkserver-modified",
   summary: "Web-based, real-time behavioral studies and experiments",
   version: "0.5.0",
   git: "https://github.com/TurkServer/turkserver-meteor.git"
 });
 
 Npm.depends({
-  "mturk-api": "1.3.2",
+  // "mturk-api": "1.3.2",
+  // "mturk-api": "3.0.2",
+  // "api-mturk": "1.2.3",
+  "aws-sdk": "2.770.0",
   jspath: "0.3.2",
   deepmerge: "0.2.7" // For merging config parameters
 });

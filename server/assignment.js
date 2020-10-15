@@ -335,7 +335,7 @@ class Assignment {
     let asstData;
 
     try {
-      asstData = TurkServer.mturk("GetAssignment", {
+      asstData = TurkServer.mturk("getAssignment", {
         AssignmentId: this.assignmentId
       });
     } catch (e) {

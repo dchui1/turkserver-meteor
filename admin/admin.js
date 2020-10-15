@@ -213,7 +213,7 @@ Meteor.methods({
   "ts-admin-account-balance"() {
     TurkServer.checkAdmin();
     try {
-      return TurkServer.mturk("GetAccountBalance", {});
+      return TurkServer.mturk("getAccountBalance", {});
     } catch (e) {
       throw new Meteor.Error(403, e.toString());
     }
@@ -226,15 +226,16 @@ Meteor.methods({
     const params = HITTypes.findOne(hitType_id);
     delete params._id;
     delete params.batchId;
-
-    params.Reward = {
-      Amount: params.Reward,
-      CurrencyCode: "USD"
-    };
+    //
+    // params.Reward = {
+    //   Amount: params.Reward,
+    //   CurrencyCode: "USD"
+    // };
+    // params.Reward = params.
 
     const quals = [];
-    for (let i in params.QualificationRequirement) {
-      const qualId = params.QualificationRequirement[i];
+    for (let i in params.QualificationRequirements) {
+      const qualId = params.QualificationRequirements[i];
       const qual = Qualifications.findOne(qualId);
       delete qual._id;
       delete qual.name;
@@ -252,14 +253,17 @@ Meteor.methods({
       quals.push(qual);
     }
 
-    params.QualificationRequirement = quals;
+    params.QualificationRequirements = quals;
 
     let hitTypeId = null;
+    console.log("HIT params being registered", params)
     try {
-      hitTypeId = TurkServer.mturk("RegisterHITType", params);
+      hitTypeId = TurkServer.mturk("createHITType", params);
     } catch (e) {
       throw new Meteor.Error(500, e.toString());
     }
+
+    console.log("Returned hit type id", hitTypeId)
 
     HITTypes.update(hitType_id, { $set: { HITTypeId: hitTypeId } });
   },
@@ -268,8 +272,10 @@ Meteor.methods({
     TurkServer.checkAdmin();
 
     const hitType = getAndCheckHitType(hitTypeId);
-
+    console.log("THe hit type", hitType);
+    console.log("The hit type ID", hitType.HITTypeId);
     params.HITTypeId = hitType.HITTypeId;
+
     params.Question = `<ExternalQuestion xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2006-07-14/ExternalQuestion.xsd">
   <ExternalURL>${TurkServer.config.mturk.externalUrl}?batchId=${hitType.batchId}</ExternalURL>
   <FrameHeight>${TurkServer.config.mturk.frameHeight}</FrameHeight>
@@ -278,7 +284,8 @@ Meteor.methods({
 
     let hitId = null;
     try {
-      hitId = TurkServer.mturk("CreateHIT", params);
+      hitId = TurkServer.mturk("createHITWithHITType", params);
+      // hitId = TurkServer.mturk("createHIT", params);
     } catch (e) {
       throw new Meteor.Error(500, e.toString());
     }
@@ -294,12 +301,13 @@ Meteor.methods({
   },
 
   "ts-admin-refresh-hit"(HITId) {
+    console.log("HITId called in refresh hit", HITId)
     TurkServer.checkAdmin();
     if (!HITId) {
       throw new Meteor.Error(400, "HIT ID not specified");
     }
     try {
-      const hitData = TurkServer.mturk("GetHIT", { HITId });
+      const hitData = TurkServer.mturk("getHIT", { HITId });
       HITs.update({ HITId }, { $set: hitData });
     } catch (e) {
       throw new Meteor.Error(500, e.toString());
@@ -307,6 +315,7 @@ Meteor.methods({
   },
 
   "ts-admin-expire-hit"(HITId) {
+    throw new Meteor.Error(500, "Not implemented, deprecated");
     TurkServer.checkAdmin();
     if (!HITId) {
       throw new Meteor.Error(400, "HIT ID not specified");
@@ -322,6 +331,8 @@ Meteor.methods({
   },
 
   "ts-admin-change-hittype"(params) {
+
+    throw new Meteor.Error(500, "Not implemented, deprecated");
     TurkServer.checkAdmin();
     check(params.HITId, String);
     check(params.HITTypeId, String);
@@ -336,6 +347,8 @@ Meteor.methods({
     }
   },
 
+
+  //either is CreateAdditionalAssignmentsForHit
   "ts-admin-extend-hit"(params) {
     TurkServer.checkAdmin();
     check(params.HITId, String);
@@ -345,7 +358,7 @@ Meteor.methods({
     getAndCheckHitType(hit.HITTypeId);
 
     try {
-      TurkServer.mturk("ExtendHIT", params);
+      TurkServer.mturk("createAdditionalAssignmentsForHIT", params);
 
       this.unblock(); // If successful, refresh the HIT
       Meteor.call("ts-admin-refresh-hit", params.HITId);
@@ -415,7 +428,7 @@ Meteor.methods({
       };
 
       try {
-        TurkServer.mturk("NotifyWorkers", params);
+        TurkServer.mturk("notifyWorkers", params);
       } catch (e) {
         throw new Meteor.Error(500, e.toString());
       }

@@ -1,4 +1,5 @@
-const mturk = Npm.require("mturk-api");
+// const mturk = Npm.require("api-mturk");
+var AWS = require('aws-sdk');
 const JSPath = Npm.require("jspath");
 
 let api = undefined;
@@ -9,26 +10,62 @@ if (!TurkServer.config.mturk.accessKeyId || !TurkServer.config.mturk.secretAcces
   const config = {
     access: TurkServer.config.mturk.accessKeyId,
     secret: TurkServer.config.mturk.secretAccessKey,
-    sandbox: TurkServer.config.mturk.sandbox
+    region: TurkServer.config.mturk.region,
+    sandbox: TurkServer.config.mturk.sandbox,
+    endpoint: "mturk-requester-sandbox.us-east-1.amazonaws.com"
+    // endpoint: 'mturk-requester'${Turkserver.config.mturk.sandbox? "-sandbox": ""}.${Turkserver.config.mturkregion}.amazonaws.com
   };
 
-  const promise = mturk
-    .connect(config)
-    .then(api => api)
-    .catch(console.error);
-  api = Promise.resolve(promise).await();
+  // mturk.createClient(config).then(function(api){
+  //
+  //   //
+  //   // api.req('getAccountBalance').then(function(res){
+  //   //   //Do something
+  //   // }).catch(console.error);
+  //   //
+  //   //
+  //   // //Example operation, with params
+  //   // api.req('SearchHITs', { PageSize: 100 }).then(function(res){
+  //   //    //Do something
+  //   // }).catch(console.error)
+  //
+  // }).catch(console.error);
+
+  // balance = new AWS.MTurk().getAccountBalance();
+  // console.log("Balance", balance);
+  // console.log("Is sandbox? ", config.sandbox )
+  api = new AWS.MTurk(config);
+  //
+  // params = {}
+  // bal = api["getAccountBalance"](params);
+  // console.log("Balance", bal);
+  // api = Promise.resolve(promise).await();
 }
 
+
 TurkServer.mturk = function(op, params) {
+  console.log("The op", op);
+
+  console.log("Params", params);
   if (!api) {
     console.log("Ignoring operation " + op + " because MTurk is not configured.");
     return;
   }
 
-  const promise = api.req(op, params).then(resp => resp);
+  callback = function(err, data) {
+    if (err) console.log(err, err.stack);
+    else {
+      console.log("data", data);
+    }
+  }
+  promise = api[op](params, callback).promise();
+  // console.log("Type of result", typeof result)
+  // console.log("Result", result)
   const result = Promise.resolve(promise).await();
 
+
   return transform(op, result);
+
 };
 
 /*
@@ -44,22 +81,23 @@ TurkServer.mturk = function(op, params) {
  */
 function transform(op, result) {
   switch (op) {
-    case "CreateHIT":
+    case "createHITWithHITType":
       return JSPath.apply("..HITId[0]", result);
-    case "GetAccountBalance":
-      return JSPath.apply("..GetAccountBalanceResult.AvailableBalance.Amount[0]", result);
-    case "GetAssignment":
+    case "getAccountBalance":
+      return JSPath.apply("..AvailableBalance", result);
+    case "getAssignment":
       return JSPath.apply("..Assignment[0]", result);
     case "GetAssignmentsForHIT":
       return JSPath.apply("..GetAssignmentsForHITResult", result);
-    case "GetHIT":
+    case "getHIT":
       return JSPath.apply("..HIT[0]", result);
     case "GetReviewableHITs":
       return JSPath.apply("..GetReviewableHITsResult", result);
-    case "RegisterHITType":
+    case "createHITType":
       return JSPath.apply("..HITTypeId[0]", result);
     case "SearchHITs":
       return JSPath.apply("..SearchHITsResult", result);
+
   }
 
   return result;
