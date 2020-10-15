@@ -321,7 +321,7 @@ Meteor.methods({
       throw new Meteor.Error(400, "HIT ID not specified");
     }
     try {
-      const hitData = TurkServer.mturk("ForceExpireHIT", { HITId });
+      const hitData = TurkServer.mturk("updateExpirationForHIT", { HITId });
 
       this.unblock(); // If successful, refresh the HIT
       Meteor.call("ts-admin-refresh-hit", HITId);
@@ -339,7 +339,7 @@ Meteor.methods({
 
     // TODO: don't allow change if the old HIT Type has a different batchId from the new one
     try {
-      TurkServer.mturk("ChangeHITTypeOfHIT", params);
+      TurkServer.mturk("updateHITTypeOfHIT", params);
       this.unblock(); // If successful, refresh the HIT
       Meteor.call("ts-admin-refresh-hit", params.HITId);
     } catch (e) {

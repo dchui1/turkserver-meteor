@@ -386,7 +386,7 @@ class Assignment {
     check(message, String);
     this._checkSubmittedStatus();
 
-    TurkServer.mturk("ApproveAssignment", {
+    TurkServer.mturk("approveAssignment", {
       AssignmentId: this.assignmentId,
       RequesterFeedback: message
     });
@@ -410,7 +410,7 @@ class Assignment {
     check(message, String);
     this._checkSubmittedStatus();
 
-    TurkServer.mturk("RejectAssignment", {
+    TurkServer.mturk("rejectAssignment", {
       AssignmentId: this.assignmentId,
       RequesterFeedback: message
     });
@@ -438,14 +438,12 @@ class Assignment {
       throw new Error("Bonus already paid");
     }
 
-    TurkServer.mturk("GrantBonus", {
+    TurkServer.mturk("sendBonus", {
       WorkerId: data.workerId,
       AssignmentId: data.assignmentId,
-      BonusAmount: {
-        Amount: data.bonusPayment,
-        CurrencyCode: "USD"
-      },
-      Reason: message
+      BonusAmount: str(data.bonusPayment),
+      Reason: message,
+      UniqueRequestToken: data._id
     });
 
     // Successful payment
