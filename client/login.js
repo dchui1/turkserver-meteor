@@ -10,7 +10,9 @@
 const unescapeURL = s => decodeURIComponent(s.replace(/\+/g, "%20"));
 
 const getURLParams = function() {
+  console.log("URL PARAMS called");
   const params = {};
+
   const m = window.location.href.match(/[\\?&]([^=]+)=([^&#]*)/g);
   if (m) {
     let i = 0;

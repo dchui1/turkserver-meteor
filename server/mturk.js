@@ -12,7 +12,7 @@ if (!TurkServer.config.mturk.accessKeyId || !TurkServer.config.mturk.secretAcces
     secret: TurkServer.config.mturk.secretAccessKey,
     region: TurkServer.config.mturk.region,
     sandbox: TurkServer.config.mturk.sandbox,
-    endpoint: "mturk-requester-sandbox.us-east-1.amazonaws.com"
+    // endpoint: "mturk-requester-sandbox.us-east-1.amazonaws.com"
     // endpoint: 'mturk-requester'${Turkserver.config.mturk.sandbox? "-sandbox": ""}.${Turkserver.config.mturkregion}.amazonaws.com
   };
 
@@ -44,9 +44,9 @@ if (!TurkServer.config.mturk.accessKeyId || !TurkServer.config.mturk.secretAcces
 
 
 TurkServer.mturk = function(op, params) {
-  console.log("The op", op);
+  // console.log("The op", op);
 
-  console.log("Params", params);
+;
   if (!api) {
     console.log("Ignoring operation " + op + " because MTurk is not configured.");
     return;
@@ -55,7 +55,7 @@ TurkServer.mturk = function(op, params) {
   callback = function(err, data) {
     if (err) console.log(err, err.stack);
     else {
-      console.log("data", data);
+      console.log("Returned data", data);
     }
   }
   promise = api[op](params, callback).promise();
