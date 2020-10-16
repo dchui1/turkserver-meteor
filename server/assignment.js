@@ -203,9 +203,11 @@ class Assignment {
   }
 
   setCompleted(exitdata) {
+    console.log("In completed");
     const user = Meteor.users.findOne(this.userId);
+    console.log("The user", user)
     const state = user && user.turkserver && user.turkserver.state;
-
+    console.log("state", state)
     // Submitting is only allowed from the exit survey
     if (state !== "exitsurvey") {
       throw new Meteor.Error(403, ErrMsg.stateErr);
@@ -427,6 +429,7 @@ class Assignment {
    * @param {String} message The message to send to the worker.
    */
   payBonus(message) {
+
     check(message, String);
     const data = Assignments.findOne(this.asstId);
 
@@ -437,14 +440,15 @@ class Assignment {
     if (data.bonusPaid != null) {
       throw new Error("Bonus already paid");
     }
-
+    console.log("Data id", data)
     TurkServer.mturk("sendBonus", {
       WorkerId: data.workerId,
       AssignmentId: data.assignmentId,
-      BonusAmount: str(data.bonusPayment),
+      BonusAmount: data.bonusPayment.toString(),
       Reason: message,
       UniqueRequestToken: data._id
     });
+    console.log("Payment successful");
 
     // Successful payment
     Assignments.update(this.asstId, {

@@ -205,6 +205,18 @@ Meteor.startup(function() {
   );
   Qualifications.upsert(
     {
+      name: "Master Workers"
+    },
+    {
+      $set: {
+        QualificationTypeId: "2F1QJWKUDD8XADTFD2Q0G6UTO95ALH",
+        Comparator: "Exists"
+
+      }
+    }
+  );
+  Qualifications.upsert(
+    {
       name: "Adult Worker"
     },
     {

@@ -648,6 +648,7 @@ Meteor.methods({
   },
 
   "ts-admin-pay-bonus"(asstId, amount, reason) {
+    console.log("Pay bonus")
     TurkServer.checkAdmin();
     check(asstId, String);
     check(amount, Number);

@@ -20,11 +20,12 @@ const getURLParams = function() {
       i++;
     }
   }
+  console.log("-------------------URL Params ", params)
   return params;
 };
 
 const params = getURLParams();
-
+// console.log("Params in login", login);
 const hitIsViewing = params.assignmentId && params.assignmentId === "ASSIGNMENT_ID_NOT_AVAILABLE";
 
 // UI helpers for login
