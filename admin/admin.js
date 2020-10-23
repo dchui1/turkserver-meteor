@@ -243,11 +243,11 @@ Meteor.methods({
       // Integer value is fine as array or not, but
       // Get the locale into its weird structure
       if (Array.isArray(qual.LocaleValue)) {
-        qual.LocaleValue = Array.from(qual.LocaleValue).map(locale => ({
+        qual.LocaleValues = Array.from(qual.LocaleValues).map(locale => ({
           Country: locale
         }));
       } else if (qual.LocaleValue) {
-        qual.LocaleValue = { Country: qual.LocaleValue };
+        qual.LocaleValues = { Country: qual.LocaleValues };
       }
 
       quals.push(qual);

@@ -7,33 +7,21 @@ let api = undefined;
 if (!TurkServer.config.mturk.accessKeyId || !TurkServer.config.mturk.secretAccessKey) {
   Meteor._debug("Missing Amazon API keys for connecting to MTurk. Please configure.");
 } else {
+
+  endpoint = "mturk-requester" + (TurkServer.config.mturk.sandbox ? "-sandbox": "")+
+    "." + TurkServer.config.mturk.region + ".amazonaws.com"
+
+  console.log("Endpoint", endpoint)
   const config = {
     access: TurkServer.config.mturk.accessKeyId,
     secret: TurkServer.config.mturk.secretAccessKey,
     region: TurkServer.config.mturk.region,
     sandbox: TurkServer.config.mturk.sandbox,
-    // endpoint: "mturk-requester-sandbox.us-east-1.amazonaws.com"
+    // endpoint: endpoint
+    endpoint: "mturk-requester-sandbox.us-east-1.amazonaws.com"
     // endpoint: 'mturk-requester'${Turkserver.config.mturk.sandbox? "-sandbox": ""}.${Turkserver.config.mturkregion}.amazonaws.com
   };
 
-  // mturk.createClient(config).then(function(api){
-  //
-  //   //
-  //   // api.req('getAccountBalance').then(function(res){
-  //   //   //Do something
-  //   // }).catch(console.error);
-  //   //
-  //   //
-  //   // //Example operation, with params
-  //   // api.req('SearchHITs', { PageSize: 100 }).then(function(res){
-  //   //    //Do something
-  //   // }).catch(console.error)
-  //
-  // }).catch(console.error);
-
-  // balance = new AWS.MTurk().getAccountBalance();
-  // console.log("Balance", balance);
-  // console.log("Is sandbox? ", config.sandbox )
   api = new AWS.MTurk(config);
   //
   // params = {}

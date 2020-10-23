@@ -101,10 +101,10 @@ Template.tsAdminQuals.events = {
 Template.tsAdminQuals.helpers({
   quals,
   value() {
-    if (this.IntegerValue) {
-      return this.IntegerValue + " (Integer)";
+    if (this.IntegerValues) {
+      return this.IntegerValues + " (Integer)";
     } else if (this.LocaleValue) {
-      return this.LocaleValue + " (Locale)";
+      return this.LocaleValues + " (Locale)";
     } else {
       return;
     }
@@ -170,21 +170,22 @@ Template.tsAdminNewQual.events = {
           if (type == null) {
             throw new Error("Must specify at least one value for In or NotIn");
           }
-
+          console.log("Vals", vals);
           if (type === "Integer") {
-            qual.IntegerValue = vals;
+            qual.IntegerValues = vals;
           } else {
-            qual.LocaleValue = vals;
+            qual.LocaleValues = vals;
           }
           break;
 
         default:
           // Things with values
+          console.log("Value", value);
           if (!!value) {
             if (parseInt(value)) {
-              qual.IntegerValue = value;
+              qual.IntegerValues = [value];
             } else {
-              qual.LocaleValue = value;
+              qual.LocaleValues = [value];
             }
           }
       }
