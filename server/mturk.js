@@ -17,17 +17,11 @@ if (!TurkServer.config.mturk.accessKeyId || !TurkServer.config.mturk.secretAcces
     secret: TurkServer.config.mturk.secretAccessKey,
     region: TurkServer.config.mturk.region,
     sandbox: TurkServer.config.mturk.sandbox,
-    // endpoint: endpoint
-    endpoint: "mturk-requester-sandbox.us-east-1.amazonaws.com"
-    // endpoint: 'mturk-requester'${Turkserver.config.mturk.sandbox? "-sandbox": ""}.${Turkserver.config.mturkregion}.amazonaws.com
+    endpoint: endpoint
   };
 
   api = new AWS.MTurk(config);
-  //
-  // params = {}
-  // bal = api["getAccountBalance"](params);
-  // console.log("Balance", bal);
-  // api = Promise.resolve(promise).await();
+
 }
 
 
