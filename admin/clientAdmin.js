@@ -63,7 +63,7 @@ const logSubErrors = {
 
 Router.map(function() {
   this.route("tsOverview", {
-    path: "/turkserver",
+    path: "/be/turkserver",
     controller: TSAdminController,
     template: "tsAdminOverview"
   });
