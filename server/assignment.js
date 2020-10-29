@@ -441,22 +441,31 @@ class Assignment {
       throw new Error("Bonus already paid");
     }
     console.log("Data id", data)
-    TurkServer.mturk("sendBonus", {
-      WorkerId: data.workerId,
-      AssignmentId: data.assignmentId,
-      BonusAmount: data.bonusPayment.toString(),
-      Reason: message,
-      UniqueRequestToken: data._id
-    });
-    console.log("Payment successful");
+    try {
 
-    // Successful payment
-    Assignments.update(this.asstId, {
-      $set: {
-        bonusPaid: new Date(),
-        bonusMessage: message
-      }
-    });
+      TurkServer.mturk("sendBonus", {
+        WorkerId: data.workerId,
+        AssignmentId: data.assignmentId,
+        BonusAmount: data.bonusPayment.toString(),
+        Reason: message,
+        UniqueRequestToken: data._id
+      });
+      console.log("Payment successful");
+
+      // Successful payment
+      Assignments.update(this.asstId, {
+        $set: {
+          bonusPaid: new Date(),
+          bonusMessage: message
+        }
+      });
+    }
+    catch(err) {
+
+      console.log("Error paying bonus for assignment:", data);
+      console.log(err);
+    }
+
   }
 
   /**
