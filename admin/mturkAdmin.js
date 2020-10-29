@@ -245,7 +245,7 @@ Template.tsAdminViewHit.events = {
     e.preventDefault();
     const params = {
       HITId: this.HITId,
-      MaxAssignmentsIncrement: parseInt(tmpl.find("input[name=assts]").value)
+      NumberOfAdditionalAssignments: parseInt(tmpl.find("input[name=assts]").value)
     };
     return TurkServer.callWithModal("ts-admin-extend-hit", params);
   },
@@ -623,6 +623,8 @@ Template.tsAdminCompletedMaintenance.events({
   },
 
   "click .-ts-pay-bonuses"() {
+    console.log("Pay bonuses called");
+
     const batchId = Session.get("_tsViewingBatchId");
     if (!checkBatch(batchId)) {
       return;
