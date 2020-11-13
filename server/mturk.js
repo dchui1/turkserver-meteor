@@ -28,7 +28,7 @@ if (!TurkServer.config.mturk.accessKeyId || !TurkServer.config.mturk.secretAcces
 TurkServer.mturk = function(op, params) {
   // console.log("The op", op);
 
-;
+
   if (!api) {
     console.log("Ignoring operation " + op + " because MTurk is not configured.");
     return;
@@ -40,11 +40,11 @@ TurkServer.mturk = function(op, params) {
       console.log("Returned data", data);
     }
   }
-  promise = api[op](params, callback).promise();
-  // console.log("Type of result", typeof result)
+  promise = api[op](params).promise();
   // console.log("Result", result)
   const result = Promise.resolve(promise).await();
-
+  // const result =
+  console.log("Result", result)
 
   return transform(op, result);
 
