@@ -44,7 +44,7 @@ TurkServer.mturk = function(op, params) {
   // console.log("Result", result)
   const result = Promise.resolve(promise).await();
   // const result =
-  console.log("Result", result)
+  // console.log("Result", result)
 
   return transform(op, result);
 
