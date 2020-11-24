@@ -528,6 +528,7 @@ Meteor.methods({
 
   // Refresh all assignments in a batch that are either unknown or submitted
   "ts-admin-refresh-assignments"(batchId) {
+    console.log("Ts refresh assignments called")
     TurkServer.checkAdmin();
     check(batchId, String);
 
@@ -543,6 +544,7 @@ Meteor.methods({
     }).forEach(function(a) {
       const asst = TurkServer.Assignment.getAssignment(a._id);
       // Refresh submitted assignments as they may have been auto-approved
+
       try {
         return asst.refreshStatus();
       } catch (e) {
@@ -551,6 +553,7 @@ Meteor.methods({
     });
 
     if (err != null) {
+      console.log("In the other error", err)
       throw err;
     }
   },
@@ -594,6 +597,7 @@ Meteor.methods({
   "ts-admin-approve-all"(batchId, msg) {
     TurkServer.checkAdmin();
     check(batchId, String);
+    console.log("Approve all assignments called")
 
     return Assignments.find({
       batchId,

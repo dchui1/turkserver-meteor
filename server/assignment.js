@@ -344,13 +344,21 @@ class Assignment {
       // XXX this is a bit hacky and will break if the exact error message changes
       // Moreover, it will remove assignment records if run *LONG AFTER*
       // MTurk no longer has kept track of an assignment.
+
+      console.log("The error for assignment id", this.assignmentId)
+      console.log(e.toString())
       if (e.toString().indexOf("does not exist") >= 0) {
         Meteor._debug(`${this.asstId} seems to have been returned on MTurk.`);
         this.setReturned();
         return;
       }
+      if (e.toString().indexOf("This operation can be called with a status of: Reviewable,Approved,Rejected") >= 0) {
+        Meteor._debug(`${this.asstId} was never properly submitted`);
+        this.setReturned();
+        return;
+      }
 
-      throw new Meteor.Error(500, e.toString());
+      throw new Meteor.Error(500, "this.assignmentId" + e.toString());
     }
 
     // XXX Just in case, check that it's actually the same worker here,
@@ -388,7 +396,6 @@ class Assignment {
   approve(message) {
     check(message, String);
     this._checkSubmittedStatus();
-
     TurkServer.mturk("approveAssignment", {
       AssignmentId: this.assignmentId,
       RequesterFeedback: message
