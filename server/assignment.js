@@ -365,7 +365,7 @@ class Assignment {
     // and not a reassignment to someone else.
     if (this.workerId !== asstData.WorkerId) {
 
-      throw new Error("Worker ID doesn't match", this.workerId, asstData.WorkerId);
+      throw new Error("Worker ID doesn't match" +  this.workerId + ", " + asstData.WorkerId);
     }
 
     Assignments.update(this.asstId, {
