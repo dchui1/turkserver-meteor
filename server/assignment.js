@@ -340,7 +340,7 @@ class Assignment {
       asstData = TurkServer.mturk("getAssignment", {
         AssignmentId: this.assignmentId
       });
-
+    } catch(e) {
       // XXX this is a bit hacky and will break if the exact error message changes
       // Moreover, it will remove assignment records if run *LONG AFTER*
       // MTurk no longer has kept track of an assignment.
@@ -365,7 +365,7 @@ class Assignment {
     // and not a reassignment to someone else.
     if (this.workerId !== asstData.WorkerId) {
 
-      throw new Error(`Worker ID doesn't match ${this.workerId} ${asstData.WorkerId}`, this.workerId, asstData.WorkerId);
+      throw new Error("Worker ID doesn't match" +  this.workerId + ", " + asstData.WorkerId);
     }
 
     Assignments.update(this.asstId, {
